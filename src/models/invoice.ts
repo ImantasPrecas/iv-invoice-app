@@ -9,8 +9,8 @@ export interface IService {
 }
 
 export interface IInvoice {
-  user: Types.ObjectId;
-  customer: Types.ObjectId;
+//   user: Types.ObjectId;
+//   customer: Types.ObjectId;
   date: Date;
   invoiceNumber: string;
   services: IService[];
@@ -29,8 +29,8 @@ const ServiceSchema = new Schema<IServiceModel>({
 export interface IInvoiceModel extends IInvoice, Document {}
 
 const InvoiceSchema = new Schema<IInvoiceModel>({
-  user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  customer: { type: Schema.Types.ObjectId, ref: 'Customer', required: true },
+//   user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+//   customer: { type: Schema.Types.ObjectId, ref: 'Customer', required: true },
   date: { type: Date, required: true },
   invoiceNumber: {type: String, required: true},
   services: {type: [ServiceSchema], required: true},

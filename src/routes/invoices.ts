@@ -8,6 +8,6 @@ const router = Router();
 router.get('/invoices', invoicesControler.getInvoices)
 
 // POST /invoices
-router.post('/invoices', invoiceValidator, invoicesControler.postInvoice)
+router.post('/invoices', invoiceValidator, invoicesControler.createInvoice)
 
 export default router
