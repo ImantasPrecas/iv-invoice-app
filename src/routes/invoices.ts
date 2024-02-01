@@ -1,6 +1,5 @@
 import {Router, Request, Response} from 'express'
 import invoicesControler from '../controlers/invoices'
-import { body } from 'express-validator'
 import { invoiceValidator } from '../validators/invoices';
 
 const router = Router();

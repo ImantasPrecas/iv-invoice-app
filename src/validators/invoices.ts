@@ -1,5 +1,5 @@
 import { body } from 'express-validator';
-import { Service } from '../models/invoice';
+import { IService } from '../models/invoice';
 
 export const invoiceValidator = [
   body('date').exists().withMessage('Date must be provided'),
@@ -12,7 +12,7 @@ export const invoiceValidator = [
   body('services')
     .isArray({ min: 1 })
     .withMessage('Services must be in Array with at least 1 item')
-    .custom((services:Service[]) => {
+    .custom((services:IService[]) => {
         for (const service of services) {
             if(
                 !service.title ||

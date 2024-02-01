@@ -1,7 +1,6 @@
-// const express = require('express')
 import express, { Request, Response, NextFunction } from 'express';
 import invoiceRoutes from './routes/invoices';
-// const bodyParser = require('body-parser')
+import mongoose from 'mongoose';
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -16,15 +15,18 @@ app.use((req: Request, res: Response, next: NextFunction) => {
     'OPTIONS,GET,POST,PUT,PATH,DELETE'
   );
   res.setHeader('Access-Control-Allow-Haders', 'Content-Type, Authorization');
-  next()
+  next();
 });
 
 app.use('/', invoiceRoutes);
 
-// app.get('/', (req: Request, res: Response) => {
-//   res.send('<h1>Welcome</h1>');
-// });
-
-app.listen(PORT, () => {
-  console.log(`Listening on port: ${PORT}`);
-});
+mongoose
+  .connect(
+    'mongodb+srv://precasimantas:gnh9kbg.ptq-czt0NHT@iv-invoice-cluster.d8lykpt.mongodb.net/invoice-app'
+  )
+  .then((result) => {
+    app.listen(PORT, () => {
+      console.log(`Listening on port: ${PORT}`);
+    });
+  })
+  .catch((err) => console.log(err));
