@@ -26,10 +26,10 @@ app.use('/invoices', invoiceRoutes);
 
 app.use(
   (error: IMyCustomError, req: Request, res: Response) => {
-    console.log('Got an error');
+    console.log('Got an error', error);
     const status = error.statusCode || 500;
     const message = error.message;
-    res.status(status).json({ message, error: error.error });
+    res.status(status).json(error);
   }
 );
 
