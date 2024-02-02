@@ -5,9 +5,12 @@ import { invoiceValidator } from '../validators/invoices';
 const router = Router();
 
 //GET /invoices
-router.get('/invoices', invoicesControler.getInvoices)
+router.get('/', invoicesControler.getInvoices)
 
 // POST /invoices
-router.post('/invoices', invoiceValidator, invoicesControler.createInvoice)
+router.post('/', invoiceValidator, invoicesControler.createInvoice)
+
+// GET /invoices/:invoiceId -- single invoice
+router.get('/:invoiceId', invoicesControler.getInvoice)
 
 export default router

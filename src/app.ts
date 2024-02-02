@@ -1,11 +1,13 @@
-require('dotenv').config()
+require('dotenv').config();
 import express, { Request, Response, NextFunction } from 'express';
 import invoiceRoutes from './routes/invoices';
 import mongoose from 'mongoose';
 
+import { IMyCustomError } from './models/interfaces';
+
 const app = express();
 const PORT = process.env.PORT || 8080;
-// const PORT =8080;
+const MONGO_URI = process.env.MONGO_URI || '';
 
 app.use(express.json());
 // app.use(express.urlencoded({extended:true}))
@@ -20,26 +22,19 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   next();
 });
 
-app.use('/', invoiceRoutes);
+app.use('/invoices', invoiceRoutes);
 
-
-interface MyCustomError extends Error {
-  statusCode?: number
-  error?: []
-}
-
-app.use((error: MyCustomError, req: Request, res: Response, next: NextFunction) => {
-  console.log(error)
-  const status = error.statusCode || 500
-  const message = error.message
-  res.status(status).json({message, error: error.error})
-
-});
+app.use(
+  (error: IMyCustomError, req: Request, res: Response) => {
+    console.log('Got an error');
+    const status = error.statusCode || 500;
+    const message = error.message;
+    res.status(status).json({ message, error: error.error });
+  }
+);
 
 mongoose
-  .connect(
-    `mongodb+srv://precasimantas:${process.env.MONGO_PASS}@iv-invoice-cluster.d8lykpt.mongodb.net/invoice-app`
-  )
+  .connect(MONGO_URI)
   .then((result) => {
     app.listen(PORT, () => {
       console.log(`Listening on port: ${PORT}`);
