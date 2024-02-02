@@ -1,6 +1,7 @@
 require('dotenv').config();
 import express, { Request, Response, NextFunction } from 'express';
 import invoiceRoutes from './routes/invoices';
+import userRoutes from './routes/auth'
 import mongoose from 'mongoose';
 
 import { IMyCustomError } from './models/interfaces';
@@ -23,6 +24,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 });
 
 app.use('/invoices', invoiceRoutes);
+app.use('/auth', userRoutes)
 
 app.use(
   (error: IMyCustomError, req: Request, res: Response) => {

@@ -20,11 +20,13 @@ export interface IUserModel extends IUser, Document {}
 const UserSchema = new Schema<IUserModel>({
   firstname: { type: String, require: true },
   lastname: { type: String, require: true },
-  personalId: { type: String, require: true },
-  iaRegistration: { type: String, require: true },
-  address: { type: String, require: true },
-  bankAccount: { type: String, require: true },
-  bankName: { type: String, require: true },
+  email: { type: String, require: true },
+  password: { type: String, require: true },
+  personalId: { type: String },
+  iaRegistration: { type: String },
+  address: { type: String },
+  bankAccount: { type: String },
+  bankName: { type: String },
   customers: [{ type: Schema.Types.ObjectId, ref: 'Customer' }],
   invoices: [{ type: Schema.Types.ObjectId, ref: 'Invoice' }],
 });
