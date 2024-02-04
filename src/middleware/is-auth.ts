@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
+import { newError } from '../utils/generateError';
 
 export interface IAuthenticatedRequest extends Request {
   userId?: string;
@@ -14,24 +15,17 @@ export default function (
 ) {
   const headers = req.headers;
   if (!headers.authorization) {
-    const error = new Error('Not authenticated!') as any;
-    error.statusCode = 401;
-    return next(error);
+    return next(newError('Not authenticated!', 401));
   }
   const token = req.get('Authorization')?.split(' ')[1] || '';
   let decodedToken;
   try {
     decodedToken = jwt.verify(token, JWT_KEY) as { userId: string };
   } catch (err: any) {
-    const error = new Error('Not Authenticated') as any
-    error.statusCode = 500;
-    error.data = err.message
-    return next(error);
+    return next(newError('Not Authenticated', 401, err.message));
   }
   if (!decodedToken) {
-    const error = new Error('Not authenticated!') as any;
-    error.statusCode = 401;
-    return next(error);
+    return next(newError('Not Authenticated', 401));
   }
 
   req.userId = decodedToken.userId;

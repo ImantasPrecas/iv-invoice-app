@@ -4,8 +4,6 @@ import invoiceRoutes from './routes/invoices';
 import userRoutes from './routes/auth';
 import mongoose from 'mongoose';
 
-import { IMyCustomError } from './models/interfaces';
-
 const app = express();
 const PORT = process.env.PORT || 8080;
 const MONGO_URI = process.env.MONGO_URI || '';
@@ -31,7 +29,7 @@ app.use((error: any, req: Request, res: Response, next: NextFunction) => {
   const message = error.message;
   const data = error.data;
   console.log('ERRORS: ', data);
-  res.status(status).json({ message:message, data:data });
+  res.status(status).json({ message: message, data: data });
 });
 
 mongoose

@@ -3,16 +3,18 @@ import { UserModel } from '../models/user';
 import { validationResult } from 'express-validator';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import { newError } from '../utils/generateError';
 
 async function register(req: Request, res: Response, next: NextFunction) {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    const error = new Error(
-      'Validation failed, entered data is incorrect!'
-    ) as any;
-    error.statusCode = 422;
-    error.data = errors.array();
-    return next(error);
+    return next(
+      newError(
+        'Validation failed, entered data is incorrect!',
+        422,
+        errors.array()
+      )
+    );
   }
 
   let newUser;
@@ -42,12 +44,13 @@ async function register(req: Request, res: Response, next: NextFunction) {
 async function login(req: Request, res: Response, next: NextFunction) {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    const error = new Error(
-      'Validation failed, entered data is incorrect!'
-    ) as any;
-    error.statusCode = 422;
-    error.data = errors.array();
-    return next(error);
+    return next(
+      newError(
+        'Validation failed, entered data is incorrect!',
+        422,
+        errors.array()
+      )
+    );
   }
 
   let user;
@@ -55,17 +58,16 @@ async function login(req: Request, res: Response, next: NextFunction) {
   try {
     user = await UserModel.findOne({ email: req.body.email });
     if (!user) {
-      const error = new Error('Cant find user with this email!') as any;
-      error.statusCode = 401;
+      const error = newError('Cant find user with this email!', 401);
       throw error;
     }
     try {
       const isEqual = await bcrypt.compare(req.body.password, user.password);
       if (!isEqual) {
-        const error = new Error(
-          'Validation failed, entered password is incorrect!'
-        ) as any;
-        error.statusCode = 401;
+        const error = newError(
+          'Validation failed, entered password is incorrect!',
+          401
+        );
         throw error;
       }
 
