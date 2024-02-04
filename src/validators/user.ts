@@ -1,7 +1,6 @@
 import { body } from 'express-validator';
 import { UserModel } from '../models/user';
 
-
 export const userValidator = [
   body('firstname').trim().exists().withMessage('First name must be provided!'),
   body('firstname')
@@ -25,6 +24,17 @@ export const userValidator = [
       });
     })
     .normalizeEmail(),
+  body('password')
+    .trim()
+    .exists()
+    .not()
+    .isEmpty()
+    .withMessage('Password must be provided!'),
+];
+
+export const userLoginValidator = [
+  body('email').exists().withMessage('Email name must be provided!'),
+  body('email').isEmail().withMessage('Email must be correct format!'),
   body('password')
     .trim()
     .exists()

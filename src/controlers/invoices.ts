@@ -4,18 +4,20 @@ import { validationResult } from 'express-validator';
 import { InvoiceModel } from '../models/invoice';
 
 async function getInvoices(req: Request, res: Response, next: NextFunction) {
-  const currentPage = req.query.page || 1
-  const perPage = req.query.limit || 10
-  let totalItems
-  
+  const currentPage = req.query.page || 1;
+  const perPage = req.query.limit || 10;
+  let totalItems;
+
   try {
-    const totalItems = await InvoiceModel.find().countDocuments()
+     totalItems = await InvoiceModel.find().countDocuments();
 
-    console.log(totalItems)
-
-    const invoices = await InvoiceModel.find().skip((+currentPage -1) * +perPage).limit(+perPage);
+    const invoices = await InvoiceModel.find()
+      .skip((+currentPage - 1) * +perPage)
+      .limit(+perPage);
     if (!invoices) {
-      res.status(404).json({ message: 'Could not find invoices!!!!' });
+      const error = new Error('Could not find invoices!') as any;
+      error.statusCode = 422;
+      throw error;
     }
     res.status(200).json({ invoices, totalItems });
   } catch (err) {
@@ -26,12 +28,12 @@ async function getInvoices(req: Request, res: Response, next: NextFunction) {
 async function createInvoice(req: Request, res: Response, next: NextFunction) {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    const error = {
-      message: 'Validation failed, entered data is incorrect!',
-      error: errors.array(),
-    } as any;
-    res.status(422).json({ error });
-    return
+    const error = new Error(
+      'Validation failed, entered data is incorrect!'
+    ) as any;
+    error.statusCode = 422;
+    error.data = errors.array();
+    return next(error);
   }
 
   const newInvoice = new InvoiceModel({
@@ -56,7 +58,9 @@ async function getInvoice(req: Request, res: Response, next: NextFunction) {
   try {
     const invoice = await InvoiceModel.findById(invoiceId);
     if (!invoice) {
-      res.status(404).json({ message: 'Could not find invoice!!!!' });
+      const error = new Error('Could not find invoice!!!!') as any;
+      error.statusCode = 404;
+      return next(error);
     }
     res.status(200).json({ invoice });
   } catch (err) {
@@ -67,19 +71,22 @@ async function getInvoice(req: Request, res: Response, next: NextFunction) {
 async function updateInvoice(req: Request, res: Response, next: NextFunction) {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    const error = {
-      message: 'Validation failed, entered data is incorrect!',
-      error: errors.array(),
-    } as any;
+    const error = new Error(
+      'Validation failed, entered data is incorrect!'
+    ) as any;
     error.statusCode = 422;
-    res.status(422).json({ error });
+    error.data = errors.array();
+    console.log('Before next');
+    return next(error);
   }
 
   const invoiceId = req.params.invoiceId;
   try {
     const invoice = await InvoiceModel.findById(invoiceId);
     if (!invoice) {
-      res.status(404).json({ message: 'Could not find invoice!!!!' });
+      const error = new Error('Could not find invoice!!!!') as any;
+      error.statusCode = 404;
+      return next(error);
     }
 
     if (invoice) {
@@ -107,17 +114,16 @@ async function deleteInvoice(req: Request, res: Response, next: NextFunction) {
     const invoice = await InvoiceModel.findById(invoiceId);
     // Check logged in user
     if (!invoice) {
-
-      res.status(404).json({ message: 'Could not find this invoice!' });
+      const error = new Error('Could not find invoice!!!!') as any;
+      error.statusCode = 404;
+      return next(error);
     }
   } catch (err) {
     next(err);
   }
   try {
     const deletedInvoice = await InvoiceModel.findByIdAndDelete(invoiceId);
-    res
-      .status(200)
-      .json({ message: 'Successfuly deleted' });
+    res.status(200).json({ message: 'Successfuly deleted' });
   } catch (err) {
     next(err);
   }

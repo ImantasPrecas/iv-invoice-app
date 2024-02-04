@@ -1,7 +1,7 @@
 require('dotenv').config();
 import express, { Request, Response, NextFunction } from 'express';
 import invoiceRoutes from './routes/invoices';
-import userRoutes from './routes/auth'
+import userRoutes from './routes/auth';
 import mongoose from 'mongoose';
 
 import { IMyCustomError } from './models/interfaces';
@@ -24,17 +24,15 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 });
 
 app.use('/invoices', invoiceRoutes);
-app.use('/auth', userRoutes)
+app.use('/auth', userRoutes);
 
-app.use(
-  (error: IMyCustomError, req: Request, res: Response) => {
-    console.log('Got an error', error);
-    const status = error.statusCode || 500;
-    const message = error.message;
-    // res.status(status).json({error, message});
-    res.status(403).json(error)
-  }
-);
+app.use((error: any, req: Request, res: Response, next: NextFunction) => {
+  const status = error.statusCode || 500;
+  const message = error.message;
+  const data = error.data;
+  console.log('ERRORS: ', data);
+  res.status(status).json({ message:message, data:data });
+});
 
 mongoose
   .connect(MONGO_URI)

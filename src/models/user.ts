@@ -13,6 +13,7 @@ export interface IUser {
   bankName: string;
   customers: Types.ObjectId[];
   invoices: Types.ObjectId[];
+  isAuthenticated: boolean
 }
 
 export interface IUserModel extends IUser, Document {}
@@ -29,6 +30,7 @@ const UserSchema = new Schema<IUserModel>({
   bankName: { type: String },
   customers: [{ type: Schema.Types.ObjectId, ref: 'Customer' }],
   invoices: [{ type: Schema.Types.ObjectId, ref: 'Invoice' }],
+  isAuthenticated: {type:Boolean, default: false}
 });
 
 const UserModel = mongoose.model('User', UserSchema);
