@@ -31,6 +31,7 @@ async function createInvoice(req: Request, res: Response, next: NextFunction) {
       error: errors.array(),
     } as any;
     res.status(422).json({ error });
+    return
   }
 
   const newInvoice = new InvoiceModel({

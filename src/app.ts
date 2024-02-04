@@ -31,7 +31,8 @@ app.use(
     console.log('Got an error', error);
     const status = error.statusCode || 500;
     const message = error.message;
-    res.status(status).json(error);
+    // res.status(status).json({error, message});
+    res.status(403).json(error)
   }
 );
 
