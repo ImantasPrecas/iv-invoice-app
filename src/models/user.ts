@@ -1,4 +1,5 @@
 import mongoose, { Types, Document } from 'mongoose';
+import { IInvoice } from './invoice';
 const Schema = mongoose.Schema;
 
 export interface IUser {
@@ -29,6 +30,7 @@ const UserSchema = new Schema<IUserModel>({
   bankAccount: { type: String },
   bankName: { type: String },
   customers: [{ type: Schema.Types.ObjectId, ref: 'Customer' }],
+  // invoices: [{ type: Schema.Types.ObjectId, ref: 'Invoice' }],
   invoices: [{ type: Schema.Types.ObjectId, ref: 'Invoice' }],
   isAuthenticated: {type:Boolean, default: false}
 });

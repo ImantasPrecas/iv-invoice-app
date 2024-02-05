@@ -9,7 +9,7 @@ export interface IService {
 }
 
 export interface IInvoice {
-//   user: Types.ObjectId;
+  createdBy: Types.ObjectId;
 //   customer: Types.ObjectId;
   date: Date;
   invoiceNumber: string;
@@ -29,7 +29,7 @@ const ServiceSchema = new Schema<IServiceModel>({
 export interface IInvoiceModel extends IInvoice, Document {}
 
 const InvoiceSchema = new Schema<IInvoiceModel>({
-//   user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  createdBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
 //   customer: { type: Schema.Types.ObjectId, ref: 'Customer', required: true },
   date: { type: Date, required: true },
   invoiceNumber: {type: String, required: true},

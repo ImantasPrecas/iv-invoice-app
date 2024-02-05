@@ -3,16 +3,28 @@ import { validationResult } from 'express-validator';
 
 import { InvoiceModel } from '../models/invoice';
 import { newError } from '../utils/generateError';
+import { UserModel } from '../models/user';
+import { Types } from 'mongoose';
 
-async function getInvoices(req: Request, res: Response, next: NextFunction) {
+export interface IAuthenticatedRequest extends Request {
+  userId?: string;
+}
+
+async function getInvoices(
+  req: IAuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+) {
   const currentPage = req.query.page || 1;
   const perPage = req.query.limit || 10;
   let totalItems;
 
   try {
-    totalItems = await InvoiceModel.find().countDocuments();
+    totalItems = await InvoiceModel.find({
+      createdBy: req.userId,
+    }).countDocuments();
 
-    const invoices = await InvoiceModel.find()
+    const invoices = await InvoiceModel.find({ createdBy: req.userId })
       .skip((+currentPage - 1) * +perPage)
       .limit(+perPage);
     if (!invoices) {
@@ -25,7 +37,11 @@ async function getInvoices(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-async function createInvoice(req: Request, res: Response, next: NextFunction) {
+async function createInvoice(
+  req: IAuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+) {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return next(
@@ -39,6 +55,7 @@ async function createInvoice(req: Request, res: Response, next: NextFunction) {
 
   const newInvoice = new InvoiceModel({
     // customer: req.body.customer,
+    createdBy: req.userId,
     date: req.body.date,
     invoiceNumber: req.body.invoiceNumber,
     services: req.body.services,
@@ -47,19 +64,36 @@ async function createInvoice(req: Request, res: Response, next: NextFunction) {
 
   try {
     const invoice = await newInvoice.save();
-    console.log('Invoice created');
-    res.status(201).json({ invoice });
+
+    const user = await UserModel.findById(req.userId);
+    if(user) {
+      user.invoices = user.invoices || []
+      user.invoices.push(newInvoice._id);
+      await user?.save();
+
+    }
+
+    res
+      .status(201)
+      .json({ message: 'Success', user: user?._id, invoice: invoice });
   } catch (err) {
     next(err);
   }
 }
 
-async function getInvoice(req: Request, res: Response, next: NextFunction) {
+async function getInvoice(
+  req: IAuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+) {
   const invoiceId = req.params.invoiceId;
   try {
     const invoice = await InvoiceModel.findById(invoiceId);
     if (!invoice) {
       return next(newError('Could not find invoice!!!!', 404));
+    }
+    if (invoice.createdBy.toString() !== req.userId) {
+      throw next(newError('Unautorized', 403));
     }
     res.status(200).json({ invoice });
   } catch (err) {
@@ -67,7 +101,11 @@ async function getInvoice(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-async function updateInvoice(req: Request, res: Response, next: NextFunction) {
+async function updateInvoice(
+  req: IAuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+) {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return next(
@@ -86,25 +124,29 @@ async function updateInvoice(req: Request, res: Response, next: NextFunction) {
       return next(newError('Could not find invoice!!!!', 404));
     }
 
+    if (invoice.createdBy.toString() !== req.userId) {
+      throw next(newError('Unautorized', 403));
+    }
+
     if (invoice) {
       invoice.date = req.body.date;
       invoice.invoiceNumber = req.body.invoiceNumber; // Check if this number dont clash with other invoices numbers. It must be unique
       invoice.services = req.body.services;
       invoice.totalPrice = req.body.totalPrice;
 
-      try {
-        const updatedInvoice = await invoice.save();
-        res.status(200).json({ updatedInvoice });
-      } catch (err) {
-        throw err;
-      }
+      const updatedInvoice = await invoice.save();
+      res.status(200).json({ updatedInvoice });
     }
   } catch (err) {
     next(err);
   }
 }
 
-async function deleteInvoice(req: Request, res: Response, next: NextFunction) {
+async function deleteInvoice(
+  req: IAuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+) {
   const invoiceId = req.params.invoiceId;
 
   try {
@@ -113,11 +155,18 @@ async function deleteInvoice(req: Request, res: Response, next: NextFunction) {
     if (!invoice) {
       return next(newError('Could not find invoice!!!!', 404));
     }
-  } catch (err) {
-    next(err);
-  }
-  try {
-    const deletedInvoice = await InvoiceModel.findByIdAndDelete(invoiceId);
+    if (invoice.createdBy.toString() !== req.userId) {
+      throw next(newError('Unautorized', 403));
+    }
+    await InvoiceModel.findByIdAndDelete(invoiceId);
+
+    const user = await UserModel.findById(req.userId)
+
+    if(user) {
+      const userInvoices = user.invoices as Types.DocumentArray<Types.ObjectId>
+      userInvoices.pull(invoiceId)
+      await user.save()
+    }
     res.status(200).json({ message: 'Successfuly deleted' });
   } catch (err) {
     next(err);
