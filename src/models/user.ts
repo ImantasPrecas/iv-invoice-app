@@ -12,7 +12,7 @@ export interface IUser {
   address: string;
   bankAccount: string;
   bankName: string;
-  customers: Types.ObjectId[];
+  clients: Types.ObjectId[];
   invoices: Types.ObjectId[];
   isAuthenticated: boolean
 }
@@ -29,7 +29,7 @@ const UserSchema = new Schema<IUserModel>({
   address: { type: String },
   bankAccount: { type: String },
   bankName: { type: String },
-  customers: [{ type: Schema.Types.ObjectId, ref: 'Customer' }],
+  clients: [{ type: Schema.Types.ObjectId, ref: 'client' }],
   // invoices: [{ type: Schema.Types.ObjectId, ref: 'Invoice' }],
   invoices: [{ type: Schema.Types.ObjectId, ref: 'Invoice' }],
   isAuthenticated: {type:Boolean, default: false}

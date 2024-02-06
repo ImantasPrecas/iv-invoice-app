@@ -54,7 +54,7 @@ async function createInvoice(
   }
 
   const newInvoice = new InvoiceModel({
-    // customer: req.body.customer,
+    // client: req.body.client,
     createdBy: req.userId,
     date: req.body.date,
     invoiceNumber: req.body.invoiceNumber,

@@ -146,23 +146,45 @@ async function update(
       throw next(newError('Cant find user', 404));
     }
 
-    user.firstname =
-      req.body.firstname === '' || undefined
-        ? user.firstname
-        : req.body.firstname;
-    user.lastname = req.body.lastname;
-    user.email = req.body.email;
-    user.personalId = req.body.personalId;
-    user.iaRegistration = req.body.iaRegistration;
-    user.address = req.body.address;
-    user.bankAccount = req.body.bankAccount;
-    user.bankName = req.body.bankName;
+    const firstname =
+      req.body.firstname !== '' || undefined
+        ? req.body.firstname
+        : user.firstname;
+    const lastname =
+      req.body.lastname !== '' || undefined ? req.body.lastname : user.lastname;
+    const email =
+      req.body.email !== '' || undefined ? req.body.email : user.email;
+    const personalId =
+      req.body.personalId !== '' || undefined
+        ? req.body.personalId
+        : user.personalId;
+    const iaRegistration =
+      req.body.iaRegistration !== '' || undefined
+        ? req.body.iaRegistration
+        : user.iaRegistration;
+    const address =
+      req.body.address !== '' || undefined ? req.body.address : user.address;
+    const bankAccount =
+      req.body.bankAccount !== '' || undefined
+        ? req.body.bankAccount
+        : user.bankAccount;
+    const bankName =
+      req.body.bankName !== '' || undefined ? req.body.bankName : user.bankName;
+
+    user.firstname = firstname;
+    user.lastname = lastname;
+    user.email = email;
+    user.personalId = personalId;
+    user.iaRegistration = iaRegistration;
+    user.address = address;
+    user.bankAccount = bankAccount;
+    user.bankName = bankName;
 
     const updatedUser = await user.save();
 
     res
       .status(200)
-      .json({ message: 'User updated successfuly', user: user._id });
+      .json({ message: 'User updated successfuly', user: updatedUser._id });
   } catch (err: any) {
     if (!err.statusCode) err.statusCode === 500;
     next(err);

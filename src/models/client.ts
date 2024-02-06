@@ -1,6 +1,6 @@
 import mongoose, { Document, Schema } from "mongoose";
 
-export interface ICustomer {
+export interface IClient {
     name: string;
     address: string;
     registration: string;
@@ -12,9 +12,9 @@ export interface ICustomer {
     additionalInfo?: string  
 }
 
-export interface ICustomerModel extends ICustomer, Document {}
+export interface IClientModel extends IClient, Document {}
 
-const CustomerSchema = new Schema<ICustomerModel>({
+const clientSchema = new Schema<IClientModel>({
     name: {type: String, require: true},
     address: {type: String, require: true},
     registration: {type: String, require: true},
@@ -26,6 +26,6 @@ const CustomerSchema = new Schema<ICustomerModel>({
     additionalInfo: {type: String}
 })
 
-const CustomerModel = mongoose.model('Customer', CustomerSchema);
+const clientModel = mongoose.model('Client', clientSchema);
 
-export {CustomerModel}
+export {clientModel}

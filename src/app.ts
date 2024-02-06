@@ -1,8 +1,10 @@
 require('dotenv').config();
 import express, { Request, Response, NextFunction } from 'express';
+import mongoose from 'mongoose';
+
 import invoiceRoutes from './routes/invoices';
 import userRoutes from './routes/auth';
-import mongoose from 'mongoose';
+import clientRoutes from './routes/client'
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -23,6 +25,8 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 
 app.use('/invoices', invoiceRoutes);
 app.use('/auth', userRoutes);
+app.use('/client', clientRoutes);
+
 
 app.use((error: any, req: Request, res: Response, next: NextFunction) => {
   const status = error.statusCode || 500;
