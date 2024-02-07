@@ -2,7 +2,7 @@ import { NextFunction, Response } from 'express';
 import { IAuthenticatedRequest } from '../middleware/is-auth';
 import { validationResult } from 'express-validator';
 import { newError } from '../utils/generateError';
-import { clientModel } from '../models/client';
+import { ClientModel } from '../models/client';
 import { UserModel } from '../models/user';
 
 async function createClient(
@@ -20,27 +20,36 @@ async function createClient(
       )
     );
   }
+  const user = await UserModel.findById(req.userId);
 
-  let message;
-  let client;
-  const oldClient = await clientModel.findOne({
+  // Check if client is already in DB
+  const existingCilent = await ClientModel.findOne({
     registration: req.body.registration,
   });
-  if (oldClient) {
-    oldClient.name = req.body.name;
-    oldClient.address = req.body.address;
-    oldClient.registration = req.body.registration;
-    oldClient.bankAccount = req.body.bankAccount;
-    oldClient.bankName = req.body.bankName;
-    oldClient.vat = req?.body?.vat || null;
-    oldClient.phone = req?.body?.phone || null;
-    oldClient.email = req?.body?.email || null;
-    oldClient.additionalInfo = req?.body?.additionalInfo || null;
 
-    client = oldClient;
-    message = 'client updated!';
+  if (existingCilent && user) {
+    //Check if client already have user asigned
+    const isUser = existingCilent.users.find(
+      (user) => user._id.toString() === req.userId
+    );
+
+    if (isUser) {
+      return next(
+        newError('This client already exists', 409, {
+          registration: req.body.registration,
+        })
+      );
+    }
+    
+    existingCilent.users = existingCilent.users || [];
+    existingCilent.users.push(user._id);
+    await existingCilent.save();
+
+    res.status(200).json({ message: 'User added to client' });
   } else {
-    const newclient = new clientModel({
+    let client;
+    const newclient = new ClientModel({
+      users: req.userId,
       name: req.body.name,
       address: req.body.address,
       registration: req.body.registration,
@@ -53,28 +62,22 @@ async function createClient(
     });
 
     client = newclient;
-    message = 'client created!';
-  }
 
-  try {
-    await client.save();
+    try {
+      await client.save();
 
-    const user = await UserModel.findById(req.userId);
-    if (user) {
-      user.clients = user.clients || [];
-
-      if (!oldClient) {
-        user.clients.push(client._id);
-        await user?.save();
+      const user = await UserModel.findById(req.userId);
+      if (user) {
+        user.clients = user.clients || [];
       }
-    }
 
-    res
-      .status(200)
-      .json({ message: message, clientId: client._id });
-  } catch (err: any) {
-    if (!err.statusCode) err.statusCode === 500;
-    next(err);
+      res
+        .status(200)
+        .json({ message: 'Client created!', clientId: client._id });
+    } catch (err: any) {
+      if (!err.statusCode) err.statusCode === 500;
+      next(err);
+    }
   }
 }
 

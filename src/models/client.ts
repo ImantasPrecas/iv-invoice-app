@@ -1,6 +1,7 @@
-import mongoose, { Document, Schema } from "mongoose";
+import mongoose, { Document, Schema, Types } from "mongoose";
 
 export interface IClient {
+    users: Types.ObjectId[]
     name: string;
     address: string;
     registration: string;
@@ -15,6 +16,7 @@ export interface IClient {
 export interface IClientModel extends IClient, Document {}
 
 const clientSchema = new Schema<IClientModel>({
+    users: [{type: Schema.Types.ObjectId, ref: 'User', required: true}],
     name: {type: String, require: true},
     address: {type: String, require: true},
     registration: {type: String, require: true},
@@ -26,6 +28,6 @@ const clientSchema = new Schema<IClientModel>({
     additionalInfo: {type: String}
 })
 
-const clientModel = mongoose.model('Client', clientSchema);
+const ClientModel = mongoose.model('Client', clientSchema);
 
-export {clientModel}
+export {ClientModel}
