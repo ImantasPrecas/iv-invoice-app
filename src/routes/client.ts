@@ -9,4 +9,7 @@ const router = Router()
 // POST /client/create
 router.post('/create', isAuth, clientValidator, clientControler.createClient)
 
+//GET /client/:clientId
+router.get('/:clientId', isAuth, clientControler.getClient)
+
 export default router

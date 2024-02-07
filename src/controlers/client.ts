@@ -20,30 +20,39 @@ async function createClient(
       )
     );
   }
-  const user = await UserModel.findById(req.userId);
-
-  // Check if client is already in DB
-  const existingCilent = await ClientModel.findOne({
-    registration: req.body.registration,
-  });
+  let user;
+  let existingCilent;
+  try {
+    user = await UserModel.findById(req.userId);
+    existingCilent = await ClientModel.findOne({
+      registration: req.body.registration,
+    });
+  } catch (err: any) {
+    if (!err.statusCode) err.statusCode === 500;
+    next(err);
+  }
 
   if (existingCilent && user) {
-    //Check if client already have user asigned
-    const isUser = existingCilent.users.find(
+    const isUserId = existingCilent.users.find(
       (user) => user._id.toString() === req.userId
     );
 
-    if (isUser) {
+    if (isUserId) {
       return next(
         newError('This client already exists', 409, {
           registration: req.body.registration,
         })
       );
     }
-    
+
     existingCilent.users = existingCilent.users || [];
     existingCilent.users.push(user._id);
-    await existingCilent.save();
+    try {
+      await existingCilent.save();
+    } catch (err: any) {
+      if (!err.statusCode) err.statusCode === 500;
+      next(err);
+    }
 
     res.status(200).json({ message: 'User added to client' });
   } else {
@@ -81,4 +90,34 @@ async function createClient(
   }
 }
 
-export default { createClient };
+async function getClient(
+  req: IAuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+) {
+  const clientId = req.params.clientId;
+
+  try {
+    const client = await ClientModel.findById(clientId);
+    if (!client) {
+      return next(newError('Could not find Client', 404));
+    }
+    res.status(200).json({
+      id: client._id,
+      name: client.name,
+      address: client.address,
+      registration: client.registration,
+      bankAccount: client.bankAccount,
+      bankName: client.bankName,
+      vat: client.vat || null,
+      phone: client.phone || null,
+      email: client.email || null,
+      additionalInfo: client.additionalInfo || null
+    });
+  } catch (err: any) {
+    if (!err.statusCode) err.statusCode === 500;
+    next(err);
+  }
+}
+
+export default { createClient, getClient };
