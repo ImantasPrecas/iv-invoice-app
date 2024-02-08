@@ -5,8 +5,8 @@ export interface IClient {
     name: string;
     address: string;
     registration: string;
-    bankAccount: string;
-    bankName: string;
+    bankAccount?: string;
+    bankName?: string;
     vat?: string;
     phone?: string;
     email?: string;

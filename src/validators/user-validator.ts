@@ -1,5 +1,5 @@
 import { body } from 'express-validator';
-import { UserModel } from '../models/user';
+import { UserModel } from '../models/user-model';
 
 const userBase = [
   body('firstname').trim().exists().withMessage('First name must be provided!'),
@@ -80,10 +80,6 @@ export const userLoginValidator = [
 
 export const userUpdateValidatos = [
   ...userBase,
-  body('personalId')
-    .trim()
-    .exists()
-    .withMessage('Personal ID must be provided!'),
   body('iaRegistration')
     .trim()
     .exists()

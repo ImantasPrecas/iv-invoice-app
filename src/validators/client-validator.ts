@@ -19,17 +19,11 @@ export const clientValidator = [
     .not()
     .isEmpty()
     .withMessage('Individual activity registration number must be provided!'),
-  body('bankAccount')
-    .trim()
-    .exists()
-    .not()
-    .isEmpty()
-    .withMessage('Individual activity registration number must be provided!'),
-  body('bankName')
-    .trim()
-    .exists()
-    .not()
-    .isEmpty()
-    .withMessage('Individual activity registration number must be provided!'),
+  // body('bankName')
+  //   .trim()
+  //   .exists()
+  //   .not()
+  //   .isEmpty()
+  //   .withMessage('Individual activity registration number must be provided!'),
 
 ];

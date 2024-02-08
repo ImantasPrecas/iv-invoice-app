@@ -1,5 +1,4 @@
 import mongoose, { Types, Document } from 'mongoose';
-import { IInvoice } from './invoice';
 const Schema = mongoose.Schema;
 
 export interface IUser {
@@ -7,7 +6,6 @@ export interface IUser {
   lastname: string;
   email: string;
   password: string;
-  personalId: string;
   iaRegistration: string;
   address: string;
   bankAccount: string;
@@ -24,13 +22,11 @@ const UserSchema = new Schema<IUserModel>({
   lastname: { type: String, require: true },
   email: { type: String, require: true },
   password: { type: String, require: true },
-  personalId: { type: String },
   iaRegistration: { type: String },
   address: { type: String },
   bankAccount: { type: String },
   bankName: { type: String },
-  clients: [{ type: Schema.Types.ObjectId, ref: 'client' }],
-  // invoices: [{ type: Schema.Types.ObjectId, ref: 'Invoice' }],
+  clients: [{ type: Schema.Types.ObjectId, ref: 'Client' }],
   invoices: [{ type: Schema.Types.ObjectId, ref: 'Invoice' }],
   isAuthenticated: {type:Boolean, default: false}
 });

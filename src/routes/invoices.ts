@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express';
-import invoicesControler from '../controlers/invoices';
-import { invoiceValidator } from '../validators/invoices';
+import invoicesControler from '../controlers/invoices-controler';
+import { invoiceValidator } from '../validators/invoices-validator';
 import isAuth from '../middleware/is-auth';
 
 const router = Router();

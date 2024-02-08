@@ -1,7 +1,7 @@
 import mongoose, { Types, Document } from 'mongoose';
 const Schema = mongoose.Schema;
 
-export interface IService {
+export interface IAssets {
   title: string;
   quantity: number;
   price: number;
@@ -13,13 +13,13 @@ export interface IInvoice {
   client: Types.ObjectId;
   date: Date;
   invoiceNumber: string;
-  services: IService[];
+  assets: IAssets[];
   totalPrice: number;
 }
 
-export interface IServiceModel extends IService, Document {}
+export interface IAssetModel extends IAssets, Document {}
 
-const ServiceSchema = new Schema<IServiceModel>({
+const AssetSchema = new Schema<IAssetModel>({
   title: { type: String, require: true },
   quantity: { type: Number, require: true },
   price: { type: Number, require: true },
@@ -33,7 +33,7 @@ const InvoiceSchema = new Schema<IInvoiceModel>({
   client: { type: Schema.Types.ObjectId, ref: 'Client', required: true },
   date: { type: Date, required: true },
   invoiceNumber: {type: String, required: true},
-  services: {type: [ServiceSchema], required: true},
+  assets: {type: [AssetSchema], required: true},
   totalPrice: {type: Number, required: true}
 },
 {timestamps: true});
@@ -41,4 +41,4 @@ const InvoiceSchema = new Schema<IInvoiceModel>({
 
 const InvoiceModel = mongoose.model<IInvoiceModel>('Invoice', InvoiceSchema)
 
-export {InvoiceModel, ServiceSchema, InvoiceSchema}
+export {InvoiceModel, AssetSchema, InvoiceSchema}

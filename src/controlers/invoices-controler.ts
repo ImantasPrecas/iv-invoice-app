@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
 import { validationResult } from 'express-validator';
 
-import { InvoiceModel } from '../models/invoice';
+import { InvoiceModel } from '../models/invoice-model';
 import { newError } from '../utils/generateError';
-import { UserModel } from '../models/user';
+import { UserModel } from '../models/user-model';
 import { Types } from 'mongoose';
 
 export interface IAuthenticatedRequest extends Request {
@@ -58,7 +58,7 @@ async function createInvoice(
     createdBy: req.userId,
     date: req.body.date,
     invoiceNumber: req.body.invoiceNumber,
-    services: req.body.services,
+    assets: req.body.assets,
     totalPrice: req.body.totalPrice,
   });
 
@@ -131,7 +131,7 @@ async function updateInvoice(
     if (invoice) {
       invoice.date = req.body.date;
       invoice.invoiceNumber = req.body.invoiceNumber; // Check if this number dont clash with other invoices numbers. It must be unique
-      invoice.services = req.body.services;
+      invoice.assets = req.body.assets;
       invoice.totalPrice = req.body.totalPrice;
 
       const updatedInvoice = await invoice.save();

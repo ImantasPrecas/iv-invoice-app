@@ -3,7 +3,8 @@ import express, { Request, Response, NextFunction } from 'express';
 import mongoose from 'mongoose';
 
 import invoiceRoutes from './routes/invoices';
-import userRoutes from './routes/auth';
+import authRoutes from './routes/auth';
+import userRoutes from './routes/user';
 import clientRoutes from './routes/client'
 
 const app = express();
@@ -23,8 +24,9 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   next();
 });
 
+app.use('/user', userRoutes);
+app.use('/auth', authRoutes);
 app.use('/invoices', invoiceRoutes);
-app.use('/auth', userRoutes);
 app.use('/client', clientRoutes);
 
 

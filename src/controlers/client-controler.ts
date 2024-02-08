@@ -2,8 +2,8 @@ import { NextFunction, Response } from 'express';
 import { IAuthenticatedRequest } from '../middleware/is-auth';
 import { validationResult } from 'express-validator';
 import { newError } from '../utils/generateError';
-import { ClientModel } from '../models/client';
-import { UserModel } from '../models/user';
+import { ClientModel } from '../models/client-model';
+import { UserModel } from '../models/user-model';
 
 async function createClient(
   req: IAuthenticatedRequest,
@@ -78,6 +78,8 @@ async function createClient(
       const user = await UserModel.findById(req.userId);
       if (user) {
         user.clients = user.clients || [];
+        user.clients.push(client._id);
+        await user.save();
       }
 
       res
@@ -88,6 +90,10 @@ async function createClient(
       next(err);
     }
   }
+}
+
+async function updateClient(req:IAuthenticatedRequest, res:Response, next: NextFunction){
+  res.json({ok:'ok'})
 }
 
 async function getClient(
@@ -107,12 +113,12 @@ async function getClient(
       name: client.name,
       address: client.address,
       registration: client.registration,
-      bankAccount: client.bankAccount,
-      bankName: client.bankName,
+      bankName: client.bankName || null,
+      bankAccount: client.bankAccount || null,
       vat: client.vat || null,
       phone: client.phone || null,
       email: client.email || null,
-      additionalInfo: client.additionalInfo || null
+      additionalInfo: client.additionalInfo || null,
     });
   } catch (err: any) {
     if (!err.statusCode) err.statusCode === 500;
@@ -120,4 +126,31 @@ async function getClient(
   }
 }
 
-export default { createClient, getClient };
+// async function getUsersClients(
+//   req: IAuthenticatedRequest,
+//   res: Response,
+//   next: NextFunction
+// ) {
+//   const userId = req.userId;
+
+//   try {
+//     const user = await UserModel.findById(userId)
+//       .populate({
+//         path: 'clients',
+//         select:
+//           'name address registration bankAccount bankName vat phone email additionalInfo myfield',
+//       })
+//       .exec();
+//     if (!user) {
+//       return next(newError('No user found', 404));
+//     }
+//     const clients = user.clients;
+
+//     res.status(200).json(clients);
+//   } catch (err: any) {
+//     if (!err.statusCode) err.statusCode === 500;
+//     next(err);
+//   }
+// }
+
+export default { createClient, getClient, updateClient };

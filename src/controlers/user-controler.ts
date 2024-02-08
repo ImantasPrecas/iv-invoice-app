@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { UserModel } from '../models/user';
+import { UserModel } from '../models/user-model';
 import { validationResult } from 'express-validator';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
@@ -109,7 +109,6 @@ async function getUser(
       firstname: user.firstname || '',
       lastname: user.lastname || '',
       email: user.email || '',
-      personalId: user.personalId || '',
       iaRegistration: user.iaRegistration || '',
       address: user.address || '',
       bankAccount: user.bankAccount || '',
@@ -141,9 +140,14 @@ async function update(
 
   try {
     const user = await UserModel.findById(userId);
-
     if (!user) {
-      throw next(newError('Cant find user', 404));
+      return next(newError('Cant find user', 404));
+    }
+
+    const existingEmail = await UserModel.findOne({email: req.body.email})    
+
+    if(existingEmail) {
+      return next(newError('Email already taken', 409))
     }
 
     const firstname =
@@ -154,10 +158,6 @@ async function update(
       req.body.lastname !== '' || undefined ? req.body.lastname : user.lastname;
     const email =
       req.body.email !== '' || undefined ? req.body.email : user.email;
-    const personalId =
-      req.body.personalId !== '' || undefined
-        ? req.body.personalId
-        : user.personalId;
     const iaRegistration =
       req.body.iaRegistration !== '' || undefined
         ? req.body.iaRegistration
@@ -174,7 +174,6 @@ async function update(
     user.firstname = firstname;
     user.lastname = lastname;
     user.email = email;
-    user.personalId = personalId;
     user.iaRegistration = iaRegistration;
     user.address = address;
     user.bankAccount = bankAccount;
@@ -191,4 +190,31 @@ async function update(
   }
 }
 
-export default { register, login, getUser, update };
+async function getClients(
+  req: IAuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+) {
+  const userId = req.userId;
+
+  try {
+    const user = await UserModel.findById(userId)
+      .populate({
+        path: 'clients',
+        select:
+          'name address registration bankAccount bankName vat phone email additionalInfo myfield',
+      })
+      .exec();
+    if (!user) {
+      return next(newError('No user found', 404));
+    }
+    const clients = user.clients;
+
+    res.status(200).json(clients);
+  } catch (err: any) {
+    if (!err.statusCode) err.statusCode === 500;
+    next(err);
+  }
+}
+
+export default { register, login, getUser, update, getClients };
