@@ -1,10 +1,10 @@
-import { Router } from "express";
+import { Router } from 'express'
 import userControler from '../controlers/user-controler'
-import { userValidator, userLoginValidator, userUpdateValidatos } from "../validators/user-validator";
+import { userValidator, userLoginValidator } from '../validators/user-validator'
 
 const router = Router()
 
-// POST /auth/register 
+// POST /auth/register
 router.post('/register', userValidator, userControler.register)
 
 // POST /auth/login

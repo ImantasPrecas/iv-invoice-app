@@ -1,28 +1,28 @@
-import { Router, Request, Response } from 'express';
-import invoicesControler from '../controlers/invoices-controler';
-import { invoiceValidator } from '../validators/invoices-validator';
-import isAuth from '../middleware/is-auth';
+import { Router } from 'express'
+import invoicesControler from '../controlers/invoices-controler'
+import { invoiceValidator } from '../validators/invoices-validator'
+import isAuth from '../middleware/is-auth'
 
-const router = Router();
+const router = Router()
 
 //GET /invoices
-router.get('/', isAuth, invoicesControler.getInvoices);
+router.get('/', isAuth, invoicesControler.getInvoices)
 
 // POST /invoices
-router.post('/', isAuth, invoiceValidator, invoicesControler.createInvoice);
+router.post('/', isAuth, invoiceValidator, invoicesControler.createInvoice)
 
 // GET /invoices/:invoiceId -- single invoice
-router.get('/:invoiceId', isAuth, invoicesControler.getInvoice);
+router.get('/:invoiceId', isAuth, invoicesControler.getInvoice)
 
 // PUT /invoices/:invoiceId
 router.put(
-  '/:invoiceId',
-  isAuth,
-  invoiceValidator,
-  invoicesControler.updateInvoice
-);
+    '/:invoiceId',
+    isAuth,
+    invoiceValidator,
+    invoicesControler.updateInvoice
+)
 
 // DELETE /invoice/:invoiceId
-router.delete('/:invoiceId', isAuth, invoicesControler.deleteInvoice);
+router.delete('/:invoiceId', isAuth, invoicesControler.deleteInvoice)
 
-export default router;
+export default router
