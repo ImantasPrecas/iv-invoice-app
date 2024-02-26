@@ -14,10 +14,17 @@
         "ecmaVersion": "latest",
         "sourceType": "module"
     },
-    "plugins": ["@typescript-eslint"],
+    "plugins": ["@typescript-eslint", "spellcheck"],
     "rules": {
         "no-console": "warn",
-        "@typescript-eslint/no-explicit-any": "off"
+        "@typescript-eslint/no-explicit-any": "off",
+        "spellcheck/spell-checker": [
+            "warn",
+            {
+                "minLength": 3,
+                "skipWords": ["dotenv", "req"]
+            }
+        ]
     }
 }
 // {
