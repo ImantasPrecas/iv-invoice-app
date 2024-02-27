@@ -22,14 +22,9 @@
             "error",
             {
                 "minLength": 3,
-                "skipWords": ["dotenv", "req", "msg", "res"]
+                "skipWords": ["dotenv", "req", "msg", "res", "timestamps"]
             }
         ]
-    },
-    "settings": {
-        "spellcheck": {
-            "exceptions": ["timestamps", "msg"]
-        }
     }
 }
 // {
