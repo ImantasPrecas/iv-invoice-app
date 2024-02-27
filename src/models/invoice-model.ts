@@ -37,6 +37,7 @@ const InvoiceSchema = new Schema<IInvoiceModel>(
         assets: { type: [AssetSchema], required: true },
         totalPrice: { type: Number, required: true },
     },
+    // eslint-disable-next-line spellcheck/spell-checker
     { timestamps: true }
 )
 

@@ -14,7 +14,6 @@ const PORT = process.env.PORT || 8080
 const MONGO_URI = process.env.MONGO_URI || ''
 
 app.use(express.json())
-// app.use(express.urlencoded({extended:true}))
 
 app.use((req: Request, res: Response, next: NextFunction) => {
     res.setHeader('Access-Control-Allow-Origin', '*')
@@ -46,4 +45,7 @@ mongoose
             // console.log(`Listening on port: ${PORT}`)
         })
     })
-    .catch((err) => console.log(err))
+    .catch((err) =>
+        // eslint-disable-next-line no-console
+        console.error(err)
+    )

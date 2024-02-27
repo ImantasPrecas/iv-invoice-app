@@ -1,28 +1,28 @@
 import { Router } from 'express'
-import invoicesControler from '../controlers/invoices-controler'
+import invoicesController from '../controllers/invoices-controller'
 import { invoiceValidator } from '../validators/invoices-validator'
 import isAuth from '../middleware/is-auth'
 
 const router = Router()
 
 //GET /invoices
-router.get('/', isAuth, invoicesControler.getInvoices)
+router.get('/', isAuth, invoicesController.getInvoices)
 
 // POST /invoices
-router.post('/', isAuth, invoiceValidator, invoicesControler.createInvoice)
+router.post('/', isAuth, invoiceValidator, invoicesController.createInvoice)
 
 // GET /invoices/:invoiceId -- single invoice
-router.get('/:invoiceId', isAuth, invoicesControler.getInvoice)
+router.get('/:invoiceId', isAuth, invoicesController.getInvoice)
 
 // PUT /invoices/:invoiceId
 router.put(
     '/:invoiceId',
     isAuth,
     invoiceValidator,
-    invoicesControler.updateInvoice
+    invoicesController.updateInvoice
 )
 
 // DELETE /invoice/:invoiceId
-router.delete('/:invoiceId', isAuth, invoicesControler.deleteInvoice)
+router.delete('/:invoiceId', isAuth, invoicesController.deleteInvoice)
 
 export default router

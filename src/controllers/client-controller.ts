@@ -22,10 +22,10 @@ async function createClient(
         )
     }
     let user
-    let existingCilent
+    let existingClient
     try {
         user = await UserModel.findById(req.userId)
-        existingCilent = await ClientModel.findOne({
+        existingClient = await ClientModel.findOne({
             registration: req.body.registration,
         })
     } catch (err: any) {
@@ -33,8 +33,8 @@ async function createClient(
         next(err)
     }
 
-    if (existingCilent && user) {
-        const isUserId = existingCilent.users.find(
+    if (existingClient && user) {
+        const isUserId = existingClient.users.find(
             (user) => user._id.toString() === req.userId
         )
 
@@ -46,10 +46,10 @@ async function createClient(
             )
         }
 
-        existingCilent.users = existingCilent.users || []
-        existingCilent.users.push(user._id)
+        existingClient.users = existingClient.users || []
+        existingClient.users.push(user._id)
         try {
-            await existingCilent.save()
+            await existingClient.save()
         } catch (err: any) {
             if (!err.statusCode) err.statusCode === 500
             next(err)
@@ -57,7 +57,7 @@ async function createClient(
 
         res.status(200).json({ message: 'User added to client' })
     } else {
-        const newclient = new ClientModel({
+        const newClient = new ClientModel({
             users: req.userId,
             name: req.body.name,
             address: req.body.address,
@@ -70,7 +70,7 @@ async function createClient(
             additionalInfo: req?.body?.additionalInfo || null,
         })
 
-        client = newclient
+        client = newClient
 
         try {
             await client.save()
@@ -126,32 +126,5 @@ async function getClient(
         next(err)
     }
 }
-
-// async function getUsersClients(
-//   req: IAuthenticatedRequest,
-//   res: Response,
-//   next: NextFunction
-// ) {
-//   const userId = req.userId;
-
-//   try {
-//     const user = await UserModel.findById(userId)
-//       .populate({
-//         path: 'clients',
-//         select:
-//           'name address registration bankAccount bankName vat phone email additionalInfo myfield',
-//       })
-//       .exec();
-//     if (!user) {
-//       return next(newError('No user found', 404));
-//     }
-//     const clients = user.clients;
-
-//     res.status(200).json(clients);
-//   } catch (err: any) {
-//     if (!err.statusCode) err.statusCode === 500;
-//     next(err);
-//   }
-// }
 
 export default { createClient, getClient, updateClient }

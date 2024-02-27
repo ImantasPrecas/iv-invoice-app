@@ -22,8 +22,8 @@ async function register(req: Request, res: Response, next: NextFunction) {
     try {
         const hashedPassword = await bcrypt.hash(req.body.password, 12)
         newUser = new UserModel({
-            firstname: req.body.firstname,
-            lastname: req.body.lastname,
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
             email: req.body.email,
             password: hashedPassword,
         })
@@ -103,8 +103,8 @@ async function getUser(
         }
 
         res.status(200).json({
-            firstname: user.firstname || '',
-            lastname: user.lastname || '',
+            firstName: user.firstName || '',
+            lastName: user.lastName || '',
             email: user.email || '',
             iaRegistration: user.iaRegistration || '',
             address: user.address || '',
@@ -147,14 +147,14 @@ async function update(
             return next(newError('Email already taken', 409))
         }
 
-        const firstname =
-            req.body.firstname !== '' || undefined
-                ? req.body.firstname
-                : user.firstname
-        const lastname =
-            req.body.lastname !== '' || undefined
-                ? req.body.lastname
-                : user.lastname
+        const firstName =
+            req.body.firstName !== '' || undefined
+                ? req.body.firstName
+                : user.firstName
+        const lastName =
+            req.body.lastName !== '' || undefined
+                ? req.body.lastName
+                : user.lastName
         const email =
             req.body.email !== '' || undefined ? req.body.email : user.email
         const iaRegistration =
@@ -174,8 +174,8 @@ async function update(
                 ? req.body.bankName
                 : user.bankName
 
-        user.firstname = firstname
-        user.lastname = lastname
+        user.firstName = firstName
+        user.lastName = lastName
         user.email = email
         user.iaRegistration = iaRegistration
         user.address = address
@@ -185,7 +185,7 @@ async function update(
         const updatedUser = await user.save()
 
         res.status(200).json({
-            message: 'User updated successfuly',
+            message: 'User updated successfully',
             user: updatedUser._id,
         })
     } catch (err: any) {
@@ -205,7 +205,7 @@ async function getClients(
         const user = await UserModel.findById(userId)
             .populate({
                 path: 'clients',
-                select: 'name address registration bankAccount bankName vat phone email additionalInfo myfield',
+                select: 'name address registration bankAccount bankName vat phone email additionalInfo myField',
             })
             .exec()
         if (!user) {

@@ -2,8 +2,8 @@ import mongoose, { Types, Document } from 'mongoose'
 const Schema = mongoose.Schema
 
 export interface IUser {
-    firstname: string
-    lastname: string
+    firstName: string
+    lastName: string
     email: string
     password: string
     iaRegistration: string
@@ -18,8 +18,8 @@ export interface IUser {
 export interface IUserModel extends IUser, Document {}
 
 const UserSchema = new Schema<IUserModel>({
-    firstname: { type: String, require: true },
-    lastname: { type: String, require: true },
+    firstName: { type: String, require: true },
+    lastName: { type: String, require: true },
     email: { type: String, require: true },
     password: { type: String, require: true },
     iaRegistration: { type: String },

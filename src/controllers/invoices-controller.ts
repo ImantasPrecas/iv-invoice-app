@@ -94,7 +94,7 @@ async function getInvoice(
             return next(newError('Could not find invoice!!!!', 404))
         }
         if (invoice.createdBy.toString() !== req.userId) {
-            throw next(newError('Unautorized', 403))
+            throw next(newError('Unauthorized', 403))
         }
         res.status(200).json({ invoice })
     } catch (err) {
@@ -126,12 +126,12 @@ async function updateInvoice(
         }
 
         if (invoice.createdBy.toString() !== req.userId) {
-            throw next(newError('Unautorized', 403))
+            throw next(newError('Unauthorized', 403))
         }
 
         if (invoice) {
             invoice.date = req.body.date
-            invoice.invoiceNumber = req.body.invoiceNumber // Check if this number dont clash with other invoices numbers. It must be unique
+            invoice.invoiceNumber = req.body.invoiceNumber // Check if this number don't clash with other invoices numbers. It must be unique
             invoice.assets = req.body.assets
             invoice.totalPrice = req.body.totalPrice
 
@@ -157,7 +157,7 @@ async function deleteInvoice(
             return next(newError('Could not find invoice!!!!', 404))
         }
         if (invoice.createdBy.toString() !== req.userId) {
-            throw next(newError('Unautorized', 403))
+            throw next(newError('Unauthorized', 403))
         }
         await InvoiceModel.findByIdAndDelete(invoiceId)
 
@@ -169,7 +169,7 @@ async function deleteInvoice(
             userInvoices.pull(invoiceId)
             await user.save()
         }
-        res.status(200).json({ message: 'Successfuly deleted' })
+        res.status(200).json({ message: 'Successfully deleted' })
     } catch (err) {
         next(err)
     }

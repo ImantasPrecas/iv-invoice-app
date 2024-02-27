@@ -2,16 +2,16 @@ import { body } from 'express-validator'
 import { UserModel } from '../models/user-model'
 
 const userBase = [
-    body('firstname')
+    body('firstName')
         .trim()
         .exists()
         .withMessage('First name must be provided!'),
-    body('firstname')
+    body('firstName')
         .trim()
         .isLength({ min: 3 })
         .withMessage('Name must be at least 3 characters!'),
-    body('lastname').trim().exists().withMessage('Last name must be provided!'),
-    body('lastname')
+    body('lastName').trim().exists().withMessage('Last name must be provided!'),
+    body('lastName')
         .trim()
         .isLength({ min: 3 })
         .withMessage('Last name must be at least 3 characters!'),
@@ -40,13 +40,13 @@ export const userValidator = [
 ]
 
 // export const userValidator = [
-//   body('firstname').trim().exists().withMessage('First name must be provided!'),
-//   body('firstname')
+//   body('firstName').trim().exists().withMessage('First name must be provided!'),
+//   body('firstName')
 //     .trim()
 //     .isLength({ min: 3 })
 //     .withMessage('Name must be at least 3 characters!'),
-//   body('lastname').trim().exists().withMessage('Last name must be provided!'),
-//   body('lastname')
+//   body('lastName').trim().exists().withMessage('Last name must be provided!'),
+//   body('lastName')
 //     .trim()
 //     .isLength({ min: 3 })
 //     .withMessage('Last name must be at least 3 characters!'),
@@ -81,7 +81,7 @@ export const userLoginValidator = [
         .withMessage('Password must be provided!'),
 ]
 
-export const userUpdateValidatos = [
+export const userUpdateValidator = [
     ...userBase,
     body('iaRegistration')
         .trim()
