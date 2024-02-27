@@ -16,10 +16,10 @@
     },
     "plugins": ["@typescript-eslint", "spellcheck"],
     "rules": {
-        "no-console": "warn",
+        "no-console": "error",
         "@typescript-eslint/no-explicit-any": "off",
         "spellcheck/spell-checker": [
-            "warn",
+            "error",
             {
                 "minLength": 3,
                 "skipWords": ["dotenv", "req"]
