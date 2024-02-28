@@ -82,7 +82,12 @@ async function login(req: Request, res: Response, next: NextFunction) {
             JWT_KEY,
             { expiresIn: '1h' }
         )
-        res.status(200).json({ userId: user._id.toString(), token: token })
+        res.status(200).json({
+            /*userId: user._id.toString()*/ 
+            firstName: user.firstName,
+            lastName: user.lastName,
+            token: token,
+        })
     } catch (err: any) {
         if (!err.statusCode) err.statusCode === 500
         next(err)
