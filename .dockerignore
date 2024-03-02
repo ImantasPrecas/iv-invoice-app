@@ -1,0 +1,9 @@
+# flyctl launch added from .gitignore
+**/.DS_Store
+
+# dotenv environment variables file
+**/.env
+
+# Dependency directories
+node_modules
+fly.toml

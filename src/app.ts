@@ -31,7 +31,7 @@ app.use('/invoices', invoiceRoutes)
 app.use('/client', clientRoutes)
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-app.use((error: any, req: Request, res: Response, next:NextFunction) => {
+app.use((error: any, req: Request, res: Response, next: NextFunction) => {
     const status = error.statusCode || 500
     const message = error.message
     const data = error.data

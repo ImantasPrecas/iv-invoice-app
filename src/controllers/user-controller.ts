@@ -83,7 +83,7 @@ async function login(req: Request, res: Response, next: NextFunction) {
             { expiresIn: '1h' }
         )
         res.status(200).json({
-            /*userId: user._id.toString()*/ 
+            /*userId: user._id.toString()*/
             firstName: user.firstName,
             lastName: user.lastName,
             token: token,
