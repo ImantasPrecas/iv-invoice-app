@@ -15,6 +15,11 @@ const MONGO_URI = process.env.MONGO_URI || ''
 
 app.use(express.json())
 
+// THIS ROUTE IS FOR TESTING PURPOUSE- DELETE AFTER DEPLOY TO PROD
+app.get('/', (req: Request, res: Response) => {
+    res.json({ message: 'Pong' })
+})
+
 app.use((req: Request, res: Response, next: NextFunction) => {
     res.setHeader('Access-Control-Allow-Origin', '*')
     res.setHeader(
