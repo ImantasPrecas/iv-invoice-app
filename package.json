@@ -5,12 +5,12 @@
     "main": "app.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "start": "nodemon ts-node src/app.ts",
-        "dev": "nodemon --exec ts-node src/app.ts",
+        "start": "nodemon node_modules/.bin/ts-node src/app.ts",
+        "dev": "nodemon --exec node_modules/.bin/ts-node src/app.ts",
         "build": "tsc",
         "serve": "node dist/app.js",
         "format:check": "node_modules/.bin/prettier --check .",
-        "format:write": "prettier --write .",
+        "format:write": "node_modules/.bin/prettier --write .",
         "lint:check": "eslint .",
         "lint:fix": "eslint --fix ."
     },

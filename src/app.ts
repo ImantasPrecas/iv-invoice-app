@@ -7,6 +7,7 @@ import invoiceRoutes from './routes/invoices'
 import authRoutes from './routes/auth'
 import userRoutes from './routes/user'
 import clientRoutes from './routes/client'
+import systemRouter from './routes/system'
 
 dotenv.config()
 const app = express()
@@ -14,11 +15,6 @@ const PORT = process.env.PORT || 8080
 const MONGO_URI = process.env.MONGO_URI || ''
 
 app.use(express.json())
-
-// THIS ROUTE IS FOR TESTING PURPOUSE- DELETE AFTER DEPLOY TO PROD
-app.get('/', (req: Request, res: Response) => {
-    res.json({ message: 'Pong' })
-})
 
 app.use((req: Request, res: Response, next: NextFunction) => {
     res.setHeader('Access-Control-Allow-Origin', '*')
@@ -34,6 +30,7 @@ app.use('/user', userRoutes)
 app.use('/auth', authRoutes)
 app.use('/invoices', invoiceRoutes)
 app.use('/client', clientRoutes)
+app.use('/system', systemRouter)
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 app.use((error: any, req: Request, res: Response, next: NextFunction) => {
