@@ -86,6 +86,7 @@ async function login(req: Request, res: Response, next: NextFunction) {
             /*userId: user._id.toString()*/
             firstName: user.firstName,
             lastName: user.lastName,
+            email: user.email,
             token: token,
         })
     } catch (err: any) {
