@@ -83,10 +83,11 @@ async function login(req: Request, res: Response, next: NextFunction) {
             { expiresIn: '1h' }
         )
         res.status(200).json({
-            /*userId: user._id.toString()*/
+            id: user._id.toString(),
             firstName: user.firstName,
             lastName: user.lastName,
             email: user.email,
+            isProfileUpdated: user.isProfileUpdated,
             token: token,
         })
     } catch (err: any) {
@@ -179,6 +180,7 @@ async function update(
             req.body.bankName !== '' || undefined
                 ? req.body.bankName
                 : user.bankName
+        const isProfileUpdated = true
 
         user.firstName = firstName
         user.lastName = lastName
@@ -187,12 +189,13 @@ async function update(
         user.address = address
         user.bankAccount = bankAccount
         user.bankName = bankName
+        user.isProfileUpdated = isProfileUpdated
 
         const updatedUser = await user.save()
 
         res.status(200).json({
             message: 'User updated successfully',
-            user: updatedUser._id,
+            user: updatedUser,
         })
     } catch (err: any) {
         if (!err.statusCode) err.statusCode === 500

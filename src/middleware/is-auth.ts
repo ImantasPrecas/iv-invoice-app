@@ -6,8 +6,6 @@ export interface IAuthenticatedRequest extends Request {
     userId?: string
 }
 
-const JWT_KEY = process.env.JWT_KEY || ''
-
 export default function (
     req: IAuthenticatedRequest,
     res: Response,
@@ -20,7 +18,7 @@ export default function (
     const token = req.get('Authorization')?.split(' ')[1] || ''
     let decodedToken
     try {
-        decodedToken = jwt.verify(token, JWT_KEY) as { userId: string }
+        decodedToken = jwt.verify(token, process.env.JWT_KEY || '') as { userId: string }
     } catch (err: any) {
         return next(newError('Not Authenticated', 401, err.message))
     }

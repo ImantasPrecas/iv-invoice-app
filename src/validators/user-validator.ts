@@ -15,7 +15,7 @@ const userBase = [
         .trim()
         .isLength({ min: 3 })
         .withMessage('Last name must be at least 3 characters!'),
-    body('email').exists().withMessage('Email name must be provided!'),
+    // body('email').exists().withMessage('Email name must be provided!'),
 ]
 
 export const userValidator = [

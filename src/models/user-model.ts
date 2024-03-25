@@ -13,6 +13,7 @@ export interface IUser {
     clients: Types.ObjectId[]
     invoices: Types.ObjectId[]
     isAuthenticated: boolean
+    isProfileUpdated: boolean
 }
 
 export interface IUserModel extends IUser, Document {}
@@ -29,6 +30,7 @@ const UserSchema = new Schema<IUserModel>({
     clients: [{ type: Schema.Types.ObjectId, ref: 'Client' }],
     invoices: [{ type: Schema.Types.ObjectId, ref: 'Invoice' }],
     isAuthenticated: { type: Boolean, default: false },
+    isProfileUpdated: { type: Boolean, default: false },
 })
 
 const UserModel = mongoose.model('User', UserSchema)
