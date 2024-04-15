@@ -18,7 +18,9 @@ export default function (
     const token = req.get('Authorization')?.split(' ')[1] || ''
     let decodedToken
     try {
-        decodedToken = jwt.verify(token, process.env.JWT_KEY || '') as { userId: string }
+        decodedToken = jwt.verify(token, process.env.JWT_KEY || '') as {
+            userId: string
+        }
     } catch (err: any) {
         return next(newError('Not Authenticated', 401, err.message))
     }

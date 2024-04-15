@@ -6,7 +6,7 @@ import isAuth from '../middleware/is-auth'
 const router = Router()
 
 //GET /user
-router.get('/', isAuth, userController.getUser)
+router.get('/:userId', isAuth, userController.getUser)
 
 //GET /user/clients
 router.get('/clients', isAuth, userController.getClients)

@@ -75,8 +75,6 @@ async function login(req: Request, res: Response, next: NextFunction) {
         const JWT_KEY = process.env.JWT_KEY || ''
         const token = jwt.sign(
             {
-                email: user.email,
-                password: user.password,
                 userId: user._id.toString(),
             },
             JWT_KEY,
@@ -84,10 +82,6 @@ async function login(req: Request, res: Response, next: NextFunction) {
         )
         res.status(200).json({
             id: user._id.toString(),
-            firstName: user.firstName,
-            lastName: user.lastName,
-            email: user.email,
-            isProfileUpdated: user.isProfileUpdated,
             token: token,
         })
     } catch (err: any) {
@@ -101,8 +95,8 @@ async function getUser(
     res: Response,
     next: NextFunction
 ) {
-    const userId = req.userId
-
+    const userId = req.params.userId
+    // IMPLEMENT USER ID ERROR HANDLING IF NOT FOUND
     try {
         const user = await UserModel.findById(userId)
         if (!user) {
@@ -162,8 +156,7 @@ async function update(
             req.body.lastName !== '' || undefined
                 ? req.body.lastName
                 : user.lastName
-        const email =
-            req.body.email !== '' || undefined ? req.body.email : user.email
+        const email = req.body.email ? req.body.email : user.email
         const iaRegistration =
             req.body.iaRegistration !== '' || undefined
                 ? req.body.iaRegistration
@@ -172,6 +165,10 @@ async function update(
             req.body.address !== '' || undefined
                 ? req.body.address
                 : user.address
+        const activityTypes =
+            req.body.activityTypes.length !== 0 || undefined
+                ? req.body.activityTypes
+                : user.activityTypes
         const bankAccount =
             req.body.bankAccount !== '' || undefined
                 ? req.body.bankAccount
@@ -187,10 +184,10 @@ async function update(
         user.email = email
         user.iaRegistration = iaRegistration
         user.address = address
+        user.activityTypes = activityTypes
         user.bankAccount = bankAccount
         user.bankName = bankName
         user.isProfileUpdated = isProfileUpdated
-
         const updatedUser = await user.save()
 
         res.status(200).json({
