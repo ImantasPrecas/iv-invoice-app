@@ -17,13 +17,13 @@ const MONGO_URI = process.env.MONGO_URI || ''
 app.use(express.json())
 
 app.use((req: Request, res: Response, next: NextFunction) => {
-    res.setHeader('Access-Control-Allow-Origin', '*')
-    res.setHeader(
-        'Access-Control-Allow-Methods',
-        'OPTIONS,GET,POST,PUT,PATH,DELETE'
-    )
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
-    next()
+  res.setHeader('Access-Control-Allow-Origin', '*')
+  res.setHeader(
+    'Access-Control-Allow-Methods',
+    'OPTIONS,GET,POST,PUT,PATH,DELETE'
+  )
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+  next()
 })
 
 app.use('/user', userRoutes)
@@ -34,21 +34,21 @@ app.use('/system', systemRouter)
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 app.use((error: any, req: Request, res: Response, next: NextFunction) => {
-    const status = error.statusCode || 500
-    const message = error.message
-    const data = error.data
-    // error && console.log('ERRORS: ', { message, data })
-    res.status(status).json({ message: message, data: data })
+  const status = error.statusCode || 500
+  const message = error.message
+  const data = error.data
+  // error && console.log('ERRORS: ', { message, data })
+  res.status(status).json({ message: message, data: data })
 })
 
 mongoose
-    .connect(MONGO_URI)
-    .then(() => {
-        app.listen(PORT, () => {
-            // console.log(`Listening on port: ${PORT}`)
-        })
+  .connect(MONGO_URI)
+  .then(() => {
+    app.listen(PORT, () => {
+      // console.log(`Listening on port: ${PORT}`)
     })
-    .catch((err) =>
-        // eslint-disable-next-line no-console
-        console.error(err)
-    )
+  })
+  .catch((err) =>
+    // eslint-disable-next-line no-console
+    console.error(err)
+  )

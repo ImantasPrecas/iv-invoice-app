@@ -16,10 +16,10 @@ router.get('/:invoiceId', isAuth, invoicesController.getInvoice)
 
 // PUT /invoices/:invoiceId
 router.put(
-    '/:invoiceId',
-    isAuth,
-    invoiceValidator,
-    invoicesController.updateInvoice
+  '/:invoiceId',
+  isAuth,
+  invoiceValidator,
+  invoicesController.updateInvoice
 )
 
 // DELETE /invoice/:invoiceId
