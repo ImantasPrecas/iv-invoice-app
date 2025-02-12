@@ -13,6 +13,7 @@ export interface IUser extends Document {
   password: string
   isProfileUpdated: boolean
   personalInfo?: {
+    personalCode?: string
     address?: string
     phone?: string
     city?: string
@@ -47,6 +48,7 @@ const UserSchema = new Schema<IUser>({
   password: { type: String, require: true },
   isProfileUpdated: { type: Boolean, default: false },
   personalInfo: {
+    personalCode: { type: String },
     address: { type: String },
     phone: { type: String },
     city: { type: String },
