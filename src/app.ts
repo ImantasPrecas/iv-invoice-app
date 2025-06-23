@@ -45,7 +45,8 @@ mongoose
     .connect(MONGO_URI)
     .then(() => {
         app.listen(PORT, () => {
-            // console.log(`Listening on port: ${PORT}`)
+            // eslint-disable-next-line no-console
+            console.log(`Listening on port: ${PORT}`)
         })
     })
     .catch((err) =>

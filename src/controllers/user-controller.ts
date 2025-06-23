@@ -77,7 +77,7 @@ async function login(req: Request, res: Response, next: NextFunction) {
             {
                 email: user.email,
                 password: user.password,
-                userId: user._id.toString(),
+                userId: user._id!.toString()
             },
             JWT_KEY,
             { expiresIn: '1h' }

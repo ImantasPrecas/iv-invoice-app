@@ -4,6 +4,7 @@ import { validationResult } from 'express-validator'
 import { newError } from '../utils/generateError'
 import { ClientModel } from '../models/client-model'
 import { UserModel } from '../models/user-model'
+import { Types } from 'mongoose'
 
 async function createClient(
     req: IAuthenticatedRequest,
@@ -47,7 +48,7 @@ async function createClient(
         }
 
         existingClient.users = existingClient.users || []
-        existingClient.users.push(user._id)
+        existingClient.users.push(user._id as Types.ObjectId)
         try {
             await existingClient.save()
         } catch (err: any) {
@@ -78,7 +79,7 @@ async function createClient(
             const user = await UserModel.findById(req.userId)
             if (user) {
                 user.clients = user.clients || []
-                user.clients.push(client._id)
+                user.clients.push(client._id as Types.ObjectId)
                 await user.save()
             }
 

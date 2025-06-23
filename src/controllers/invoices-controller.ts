@@ -68,7 +68,7 @@ async function createInvoice(
         const user = await UserModel.findById(req.userId)
         if (user) {
             user.invoices = user.invoices || []
-            user.invoices.push(newInvoice._id)
+            user.invoices.push(newInvoice._id as Types.ObjectId)
             await user?.save()
         }
 
